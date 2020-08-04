@@ -1,4 +1,4 @@
-FROM   registry.access.redhat.com/ubi8/ubi:8.0
+FROM   registry.access.redhat.com/ubi9/ubi:8.0
 
 MAINTAINER   Red Hat Training <training@redhat.com>
 
@@ -17,12 +17,14 @@ ADD   https://github.com/RedHatTraining/DO288-apps/releases/download/OCP-4.1-1/h
 
 COPY  run-app.sh /opt/app-root/bin/
 
-RUN   chown -R wildfly:wildfly /opt/app-root && \
-      chmod -R 700 /opt/app-root
+EXPOSE
+
 
 EXPOSE 8080
-
-USER  wildfly
+RUN chgrp -R 0 /opt/app-root && \
+chmod -R g=u /opt/app-root
 
 # Run the fat JAR
 CMD   /opt/app-root/bin/run-app.sh
+
+USER 1001
